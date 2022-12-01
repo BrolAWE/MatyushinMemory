@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Начать эксперимент</title>
+</head>
+<body>
+<form action="{% url "start_test" %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ message }}
+    <p>
+        Имя участника:
+        {{ form.name }}
+    </p>
+
+    <p><input type="submit" value="Начать эксперимент"/></p>
+</form>
+</body>
+</html>

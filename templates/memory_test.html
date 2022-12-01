@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Тест на память</title>
+</head>
+<body>
+<div style="width: 70%; height: 420px; margin:auto; background: {{ hex_up }};"></div>
+<div style="width: 70%; height: 70px; margin:auto; background: {{ hex_mid }};"></div>
+<div style="width: 70%; height: 210px; margin:auto; background: {{ hex_down }};"></div>
+<form action="{% url "memory_test" table_pk member_pk %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ message }}
+    <p>
+        Ответ:
+        {{ form.answer }}
+        <input type="submit" value="Ответить"/>
+    </p>
+</form>
+</body>
+</html>

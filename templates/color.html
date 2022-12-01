@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="{% static 'scripts/jquery.min.js' %}"></script>
+    <script type="text/javascript" charset="utf-8">
+        setTimeout(function () {
+            window.location.href = '{% url "color_table" next_table member_pk %}';
+        }, 20000);
+    </script>
+    <title>Цветовая таблица</title>
+</head>
+<body>
+<div style="width: 70%; height: 420px; margin:auto; background: {{ hex_up }};"></div>
+<div style="width: 70%; height: 70px; margin:auto; background: {{ hex_mid }};"></div>
+<div style="width: 70%; height: 210px; margin:auto; background: {{ hex_down }};"></div>
+</body>
+</html>
