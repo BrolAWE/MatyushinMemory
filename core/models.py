@@ -70,3 +70,9 @@ class Answer(models.Model):
 
     def __str__(self):
         return "{0} {1} {2} {3}".format(self.member, self.table, self.answer, self.was_shown)
+
+
+class Update(models.Model):
+    """Обновление таблиц"""
+    docfile = models.FileField(upload_to='update/%Y/%m/%d',
+                               verbose_name="Файл обновления", null=True, blank=True)

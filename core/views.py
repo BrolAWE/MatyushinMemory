@@ -2,9 +2,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 import random
 import xlwt
+import pandas as pd
 
-from core.forms import MemberForm, AnswerForm
-from core.models import ColorTable, ColorSample, Member, ColorOrder, Answer
+from core.forms import MemberForm, AnswerForm, UpdateForm
+from core.models import ColorTable, ColorSample, Member, ColorOrder, Answer, Update, ColorBook
 
 
 # Create your views here.
@@ -70,11 +71,13 @@ def color_table(request, table_pk, member_pk):
 
 def memory_test(request, table_pk, member_pk):
     """Тест на память"""
+    tables = list(ColorTable.objects.all())
     if request.method == 'POST':
         form = AnswerForm(request.POST, request.FILES)  # Выгрузить
         if form.is_valid():
             member = Member.objects.get(pk=member_pk)
-            table = ColorTable.objects.get(pk=table_pk)
+
+            table = ColorTable.objects.get(name=tables[int(table_pk)-1])
             was_shown = ColorOrder.objects.filter(member=member_pk, table=table_pk).exists()
             answer = Answer(answer=request.POST['answer'],
                             member=member,
@@ -90,7 +93,7 @@ def memory_test(request, table_pk, member_pk):
     else:
         form = AnswerForm()
 
-    table = ColorTable.objects.get(pk=table_pk)
+    table = ColorTable.objects.get(name=tables[int(table_pk)-1])
 
     sample_up = ColorSample.objects.get(table=table, position='верх')
     sample_mid = ColorSample.objects.get(table=table, position='центр')
@@ -127,3 +130,53 @@ def export_xls(request):
             ws.write(row_num, col_num, row[col_num], font_style)
     wb.save(response)
     return response
+
+
+def update_database(request):
+    """Обновить базу данных"""
+    if not request.user.is_authenticated:
+        return redirect("index")
+
+    message = 'Выберите файл обновления'
+    # Обработка загрузки файла
+    if request.method == 'POST':
+        form = UpdateForm(request.POST, request.FILES)  # Получение данных с формы
+        if form.is_valid():
+            newdoc = Update(docfile=request.FILES['docfile'])  # Создание объекта обновления
+
+            book_df = pd.read_excel(newdoc.docfile, "Тетради")
+            table_df = pd.read_excel(newdoc.docfile, "Таблицы")
+            sample_df = pd.read_excel(newdoc.docfile, "Образцы")
+
+            for i in range(book_df.shape[0]):
+                """Загружаем тетради"""
+                book = ColorBook(name=book_df.iloc[i]["Название"])
+                book.save()
+
+            for i in range(table_df.shape[0]):
+                """Загружаем таблицы"""
+                qu = table_df.iloc[i]
+                book = ColorBook.objects.get(name=qu["Тетрадь"])
+                table = ColorTable(name=qu["Название"], book=book)
+                table.save()
+
+            for i in range(sample_df.shape[0]):
+                """Загружаем Образцы"""
+                qu = sample_df.iloc[i]
+                table = ColorTable.objects.get(name=qu["Таблица"])
+                sample = ColorSample(table=table, position=qu["Позиция"].strip(), R=qu["R"], G=qu["G"], B=qu["B"])
+                sample.save()
+
+            newdoc.save()  # Сохранение тренировки
+
+            # Перенаправление на главную страницу
+            return redirect('start_test')
+        else:
+            message = 'Форма не корректна. Пожалуйста исправьте следующие ошибки:'
+    else:
+        form = UpdateForm()  # Пустая незаполненная форма
+
+    count_books = ColorBook.objects.all().count()
+    # Отображение страницы обновления
+    context = {'form': form, 'message': message, 'count_books': count_books}
+    return render(request, 'update_database.html', context)
