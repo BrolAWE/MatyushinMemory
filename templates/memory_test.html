@@ -12,7 +12,9 @@
     {% csrf_token %}
     {{ message }}
     <p>
-        Ответ:
+        Мы уже показывали вам эту таблицу?
+    </p>
+    <p>
         {{ form.answer }}
         <input type="submit" value="Ответить"/>
     </p>

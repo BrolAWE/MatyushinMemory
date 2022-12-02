@@ -46,6 +46,7 @@ class ColorSample(models.Model):
 class Member(models.Model):
     """Участник эксперимента"""
     name = models.CharField(max_length=50)
+    duration = models.IntegerField(verbose_name="Длительность в мс", default=2000)
 
     def __str__(self):
         return "{0} {1}".format(self.name, self.pk)

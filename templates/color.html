@@ -7,7 +7,7 @@
     <script type="text/javascript" charset="utf-8">
         setTimeout(function () {
             window.location.href = '{% url "color_table" next_table member_pk %}';
-        }, 20000);
+        }, {{ duration }});
     </script>
     <title>Цветовая таблица</title>
 </head>

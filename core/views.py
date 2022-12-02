@@ -20,7 +20,7 @@ def start_test(request):
     if request.method == 'POST':
         form = MemberForm(request.POST, request.FILES)  # Выгрузить
         if form.is_valid():
-            member = Member(name=request.POST['name'])  # Заполнить
+            member = Member(name=request.POST['name'], duration=request.POST['duration'])  # Заполнить
             member.save()  # Сохранить
 
             tables = list(ColorTable.objects.all())  # Получить все таблицы
@@ -45,6 +45,7 @@ def start_test(request):
 def color_table(request, table_pk, member_pk):
     """Показать таблицу Матюшина"""
     table = ColorTable.objects.get(pk=table_pk)
+    duration = Member.objects.get(pk=member_pk).duration
 
     sample_up = ColorSample.objects.get(table=table, position='верх')
     sample_mid = ColorSample.objects.get(table=table, position='центр')
@@ -60,7 +61,7 @@ def color_table(request, table_pk, member_pk):
         next_table = ColorOrder.objects.get(member=member_pk, position=next_position).table.pk
 
         context = {'hex_up': hex_up, 'hex_mid': hex_mid, 'hex_down': hex_down, 'next_table': next_table,
-                   'member_pk': member_pk}
+                   'member_pk': member_pk, 'duration': duration}
 
         return render(request, 'color.html', context)
 
