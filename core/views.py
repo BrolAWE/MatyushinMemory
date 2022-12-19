@@ -14,6 +14,14 @@ def rgb_to_hex(rgb):
     return '#%02x%02x%02x' % rgb
 
 
+def experiments(request):
+    return render(request, 'experiments.html')
+
+
+def start_img(request):
+    return render(request, 'experiments.html')
+
+
 def start_test(request):
     """Начать тестирование"""
     message = "Для начала эксперимента введите имя"
@@ -78,7 +86,7 @@ def memory_test(request, table_pk, member_pk):
         if form.is_valid():
             member = Member.objects.get(pk=member_pk)
 
-            table = ColorTable.objects.get(name=tables[int(table_pk)-1])
+            table = ColorTable.objects.get(name=tables[int(table_pk) - 1])
             was_shown = ColorOrder.objects.filter(member=member_pk, table=table_pk).exists()
             answer = Answer(answer=request.POST['answer'],
                             member=member,
@@ -94,7 +102,7 @@ def memory_test(request, table_pk, member_pk):
     else:
         form = AnswerForm()
 
-    table = ColorTable.objects.get(name=tables[int(table_pk)-1])
+    table = ColorTable.objects.get(name=tables[int(table_pk) - 1])
 
     sample_up = ColorSample.objects.get(table=table, position='верх')
     sample_mid = ColorSample.objects.get(table=table, position='центр')

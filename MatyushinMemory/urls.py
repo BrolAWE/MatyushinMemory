@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from core.views import color_table, start_test, memory_test, export_xls, update_database
+from core.views import color_table, start_test, memory_test, export_xls, update_database, experiments, start_img
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', start_test, name='start_test'),
+    path('', experiments, name='experiments'),
+    path('start_matyushin/', start_test, name='start_test'),
+    path('start_img/', start_img, name='start_img'),
     path('table/<str:table_pk>/<str:member_pk>', color_table, name='color_table'),
     path('memory_test/<str:table_pk>/<str:member_pk>', memory_test, name='memory_test'),
     path('export_xls/', export_xls, name='export_xls'),
