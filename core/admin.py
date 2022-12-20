@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.models import ColorBook, ColorTable, ColorSample, Member, ColorOrder, Answer
+from core.models import ColorBook, ColorTable, ColorSample, Member, ColorOrder, Answer, ImgSample
 
 # Register your models here.
 
@@ -10,3 +10,4 @@ admin.site.register(ColorSample)
 admin.site.register(Member)
 admin.site.register(ColorOrder)
 admin.site.register(Answer)
+admin.site.register(ImgSample)

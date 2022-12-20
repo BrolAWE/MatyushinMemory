@@ -14,6 +14,7 @@ class MemberForm(forms.ModelForm):
     class Meta:
         model = Member
         fields = '__all__'
+        exclude = ('experiment',)
 
 
 class AnswerForm(forms.ModelForm):
@@ -24,7 +25,7 @@ class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
         fields = '__all__'
-        exclude = ('member', 'table', 'was_shown')
+        exclude = ('member', 'table', 'was_shown', 'image')
 
 
 class UpdateForm(forms.ModelForm):
